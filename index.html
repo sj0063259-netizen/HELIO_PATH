@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELIOPATH - Smart Sustainable Infrastructure System</title>
+</head>
+<link rel="stylesheet" href="style.css">
+<body>
+
+    <nav class="navbar">
+        <a href="#" class="nav-logo">HELIOPATH</a>
+        
+        <input type="checkbox" id="menu-check" class="menu-checkbox">
+        
+        <label for="menu-check" class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+
+        <ul class="nav-links">
+            <li><a href="#">HOME</a></li>
+            <li><a href="prototypes.html">PROTOTYPES</a></li>
+            <li><a href="dashboard.html">DASHBOARD</a></li>
+            <li><a href="future.html">FUTURE VISION</a></li>
+            <li><a href="about.html">ABOUT</a></li>
+            <li><a href="#">CONTACT</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        
+        <header class="hero">
+            <h1>HELIOPATH</h1>
+            <div class="subtitle">Smart Sustainable Infrastructure System</div>
+            <p class="tagline">Integrating Solar Infrastructure, IoT Automation, and Smart Campus Technologies for a Sustainable Tomorrow</p>
+        </header>
+
+        <main class="grid-panels">
+            <section class="card green-panel">
+                <div>
+                    <h2>Prototypes & Documentation</h2>
+                    <p>Explore all the prototypes we’ve built so far, with detailed information and documentation.</p>
+                </div>
+                <a href="prototypes.html" class="btn">Explore &rarr;</a>
+            </section>
+
+            <section class="card blue-panel">
+                <div>
+                    <h2>Live Dashboard</h2>
+                    <p>View real-time data from our systems. Monitor performance, sensors and automation live.</p>
+                </div>
+                <a href="dashboard.html" class="btn">Open Dashboard &rarr;</a>
+            </section>
+
+            <section class="card orange-panel">
+                <div>
+                    <h2>Future Vision & Research</h2>
+                    <p>Discover our future plans, research areas and the vision behind HELIOPATH.</p>
+                </div>
+                <a href="future.html" class="btn">Discover More &rarr;</a>
+            </section>
+        </main>
+
+        <footer class="status-container">
+            <div class="status-panel">
+                <div class="status-item">
+                    <span class="status-label">System Status</span>
+                    <span class="status-value operational">Operational</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Energy Generated</span>
+                    <span class="status-value">12.45 kW</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">CO₂ Reduced</span>
+                    <span class="status-value">245.8 kg</span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+<script type="text/javascript">
+  (function(d, t) {
+      var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+      v.onload = function() {
+        window.voiceflow.chat.load({
+          verify: { projectID: '6a0c10b444f40a1cbf308da7' },
+          url: 'https://general-runtime.voiceflow.com',
+          voice: {
+            url: "https://runtime-api.voiceflow.com"
+          },
+          // Custom CSS & Layout Injection Layer
+          assistant: {
+            stylesheet: `
+              /* 1. Main Chat Window Panel Background */
+              .vfrc-widget {
+                background: rgba(15, 23, 42, 0.9) !important;
+                backdrop-filter: blur(12px) !important;
+                -webkit-backdrop-filter: blur(12px) !important;
+                border: 2px solid rgba(255, 255, 255, 0.05) !important;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+              }
+
+              /* 2. Chat Header Strip */
+              .vfrc-header {
+                background: rgba(6, 11, 19, 0.8) !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+              }
+
+              /* 3. Floating Action Launcher Button (Orange Glow) */
+              .vfrc-launcher {
+                background-color: #060b13 !important;
+                border: 1px solid #f97316 !important;
+                box-shadow: 0 0 15px rgba(249, 115, 22, 0.4) !important;
+                transition: all 0.3s ease !important;
+              }
+              .vfrc-launcher:hover {
+                transform: scale(1.08) !important;
+                box-shadow: 0 0 25px rgba(249, 115, 22, 0.7) !important;
+              }
+
+              /* 4. Navigation Chips & Interaction Buttons */
+              .vfrc-button {
+                background: rgba(249, 115, 22, 0.05) !important;
+                border: 1px solid #f97316 !important;
+                color: #f97316 !important;
+                font-weight: 600 !important;
+                transition: all 0.2s ease !important;
+              }
+              .vfrc-button:hover {
+                background: #f97316 !important;
+                color: #060b13 !important;
+                box-shadow: 0 0 12px rgba(249, 115, 22, 0.4) !important;
+              }
+
+              /* 5. User Message Input Area */
+              .vfrc-footer {
+                background: rgba(6, 11, 19, 0.8) !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+              }
+              .vfrc-prompt {
+                background: rgba(15, 23, 42, 0.6) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                color: #ffffff !important;
+              }
+              .vfrc-prompt:focus {
+                border-color: #f97316 !important;
+              }
+            `
+          }
+        });
+      }
+      v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+  })(document, 'script');
+</script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELIOPATH - Live IoT Dashboard</title>
+    <style>
+        /* --- Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #060b13;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: linear-gradient(to bottom, rgba(6, 11, 19, 0.75), rgba(6, 11, 19, 0.95)), url('background-image.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        /* --- Navigation Bar --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(6, 11, 19, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 1000;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #a0aec0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover, .nav-links .active {
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(0, 212, 255, 0.8);
+        }
+
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
+            background: #00d4ff; box-shadow: 0 0 8px #00d4ff; transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after, .nav-links .active::after { width: 100%; }
+
+        /* --- Mobile Toggle --- */
+        .menu-checkbox { display: none; }
+        .menu-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; z-index: 1010; padding: 5px; }
+        .menu-toggle span { display: block; width: 30px; height: 3px; background: #ffffff; border-radius: 2px; transition: all 0.3s ease; }
+
+        /* --- Main Dashboard Container --- */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 120px 20px 40px 20px;
+        }
+
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .dash-header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #ffffff 40%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .mode-indicator {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-pulse {
+            width: 8px; height: 8px; background: #3b82f6; border-radius: 50%;
+            box-shadow: 0 0 8px #3b82f6; animation: pulseGlow 1.5s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(0.9); opacity: 0.4; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.4; }
+        }
+
+        /* --- Dashboard Grid Blocks --- */
+        .dash-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .dash-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: border-color 0.3s ease;
+        }
+
+        .dash-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .card-title-block {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 12px;
+        }
+
+        .card-icon { font-size: 1.4rem; }
+        .dash-card h2 { font-size: 1.15rem; font-weight: 700; letter-spacing: 0.5px; color: #f1f5f9; }
+
+        /* Data Readouts Layout */
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .data-row:last-child { margin-bottom: 0; }
+        .data-label { font-size: 0.9rem; color: #94a3b8; }
+        .data-value { font-size: 1.1rem; font-weight: 700; color: #f8fafc; }
+
+        /* High Tech Visual Status Elements */
+        .status-badge {
+            font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; font-weight: 700; text-transform: uppercase;
+        }
+        .status-badge.green { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; }
+        .status-badge.orange { background: rgba(249, 115, 22, 0.1); border: 1px solid #f97316; color: #f97316; }
+
+        /* Progress Bar for Storage */
+        .progress-container {
+            width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; margin-top: 6px; overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%; background: linear-gradient(90deg, #3b82f6, #10b981); width: 78%; transition: width 0.5s ease;
+        }
+
+        /* --- Responsive Media Views --- */
+        @media (max-width: 768px) {
+            .navbar { padding: 20px 30px; }
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 75%; max-width: 300px; height: 100vh;
+                background: rgba(6, 11, 19, 0.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+                border-left: 1px solid rgba(255, 255, 255, 0.1); flex-direction: column; justify-content: center;
+                align-items: center; gap: 40px; transition: right 0.4s ease; z-index: 1005;
+            }
+            .menu-checkbox:checked ~ .nav-links { right: 0; }
+            .menu-checkbox:checked ~ .menu-toggle span:nth-child(1) { transform: translateY(9px) rotate(45deg); background-color: #00d4ff; }
+            .menu-checkbox:checked ~ .menu-toggle span:nth-child(2) { opacity: 0; }
+            .menu-checkbox:checked ~ .menu-toggle span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); background-color: #00d4ff; }
+
+            .dash-header { flex-direction: column; align-items: flex-start; }
+            .dash-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">HELIOPATH</a>
+        <input type="checkbox" id="menu-check" class="menu-checkbox">
+        <label for="menu-check" class="menu-toggle">
+            <span></span><span></span><span></span>
+        </label>
+        <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="prototypes.html">PROTOTYPES</a></li>
+            <li><a href="dashboard.html" class="active">DASHBOARD</a></li>
+            <li><a href="future.html">FUTURE VISION</a></li>
+            <li><a href="about.html">ABOUT</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        
+        <header class="dash-header">
+            <div>
+                <h1>Live Systems Dashboard</h1>
+                <p style="color: #64748b; font-size: 0.95rem; margin-top: 4px;">Unified hardware telemetry & environment automation metrics.</p>
+            </div>
+            <div class="mode-indicator">
+                <div class="mode-pulse"></div>
+                <span id="system-mode-text">Simulated IoT Mode</span>
+            </div>
+        </header>
+
+        <main class="dash-grid">
+
+            <section class="dash-card">
+                <div class="card-title-block">
+                    <span class="card-icon">🌞</span>
+                    <h2>Solar Energy Monitoring</h2>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Solar Output Array</span>
+                    <span class="data-value" id="solar-output">2.40 kW</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Battery Charging Input</span>
+                    <span class="data-value" id="solar-charge">18.5 A</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Current Infrastructure Load</span>
+                    <span class="data-value">1.15 kW</span>
+                </div>
+            </section>
+
+            <section class="dash-card">
+                <div class="card-title-block">
+                    <span class="card-icon">💡</span>
+                    <h2>Smart Pathway Lighting</h2>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Ambient Light Intensity (LDR)</span>
+                    <span class="data-value" id="ldr-val">1320 Lx</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Pathway Array State</span>
+                    <span class="status-badge orange" id="lighting-state">HALF ON</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Energy Saving Eco Mode</span>
+                    <span class="status-badge green">ACTIVE</span>
+                </div>
+            </section>
+
+            <section class="dash-card">
+                <div class="card-title-block">
+                    <span class="card-icon">🚶</span>
+                    <h2>Motion Detection Matrix</h2>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Pedestrian Sensors</span>
+                    <span class="status-badge green" id="motion-state">ACTIVE</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">High Activity Zone</span>
+                    <span class="data-value">Pathway Sector B</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Crosswalk Automation Trigger</span>
+                    <span class="data-value">STANDBY</span>
+                </div>
+            </section>
+
+            <section class="dash-card">
+                <div class="card-title-block">
+                    <span class="card-icon">🔋</span>
+                    <h2>Battery Storage System</h2>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Storage Capacity Level</span>
+                    <span class="data-value" id="battery-level">78%</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="battery-bar"></div>
+                </div>
+                <div style="margin-top: 15px;" class="data-row">
+                    <span class="data-label">BMS Status health</span>
+                    <span class="status-badge green">EXCELLENT</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Estimated Backup Duration</span>
+                    <span class="data-value">14.2 Hours</span>
+                </div>
+            </section>
+
+            <section class="dash-card">
+                <div class="card-title-block">
+                    <span class="card-icon">🌡️</span>
+                    <h2>Environment Monitoring</h2>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Ambient Temperature</span>
+                    <span class="data-value" id="api-temp">Fetching...</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Relative Air Humidity</span>
+                    <span class="data-value" id="api-humidity">Fetching...</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Local Sky Condition</span>
+                    <span class="data-value" id="api-condition" style="font-size:0.95rem; text-transform:capitalize;">Connecting...</span>
+                </div>
+            </section>
+
+            <section class="dash-card">
+                <div class="card-title-block">
+                    <span class="card-icon">📡</span>
+                    <h2>Core System Node Status</h2>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">ESP32 Hardware Core</span>
+                    <span class="status-badge green">CONNECTED</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Campus Network Link</span>
+                    <span class="data-value" id="rssi-val">-58 dBm (Strong)</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Automation Pipeline Execution</span>
+                    <span class="status-badge green">RUNNING</span>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // --- 1. Real Weather Integration via OpenWeatherMap API ---
+        const apiKey = "0373e4c920312c723b3a1b98cae35ea4";
+        // Default target city for campus tracking (Change to your actual city name)
+        const targetCity = "Kalaburagi"; 
+
+        async function getRealCampusWeather() {
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${targetCity}&units=metric&appid=${apiKey}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("API Execution Interrupted");
+                const data = await response.parse ? await response.parse() : await response.json();
+                
+                // Render real data values inside elements
+                document.getElementById('api-temp').textContent = `${data.main.temp.toFixed(1)}°C`;
+                document.getElementById('api-humidity').textContent = `${data.main.humidity}%`;
+                document.getElementById('api-condition').textContent = data.weather[0].description;
+            } catch (error) {
+                console.log("Weather API Fetch Error:", error);
+                // Graceful fallback values in case plan limit is exceeded
+                document.getElementById('api-temp').textContent = "29.0°C";
+                document.getElementById('api-humidity').textContent = "62%";
+                document.getElementById('api-condition').textContent = "Clear Sky (Simulated)";
+            }
+        }
+
+        // --- 2. Dynamic Hardware Telemetry Simulation Engine (setInterval) ---
+        function simulateHardwareTelemetry() {
+            // Randomly oscillate solar production
+            let baseSolar = 2.0 + Math.random() * 0.8;
+            document.getElementById('solar-output').textContent = `${baseSolar.toFixed(2)} kW`;
+            document.getElementById('solar-charge').textContent = `${(baseSolar * 7.5).toFixed(1)} A`;
+
+            // Fluctuating Ambient Light Sensor values (LDR)
+            let currentLdr = Math.floor(400 + Math.random() * 1200);
+            document.getElementById('ldr-val').textContent = `${currentLdr} Lx`;
+
+            // Embedded IoT Logic branch mimicry
+            const lightBadge = document.getElementById('lighting-state');
+            if (currentLdr > 1200) {
+                lightBadge.textContent = "ALL OFF";
+                lightBadge.className = "status-badge green";
+            } else if (currentLdr > 600) {
+                lightBadge.textContent = "HALF ON";
+                lightBadge.className = "status-badge orange";
+            } else {
+                lightBadge.textContent = "ALL ON";
+                lightBadge.className = "status-badge orange";
+                lightBadge.style.borderColor = "#ef4444";
+                lightBadge.style.color = "#ef4444";
+            }
+
+            // Alternating Pedestrian Activity status flags
+            const motionBadge = document.getElementById('motion-state');
+            if (Math.random() > 0.5) {
+                motionBadge.textContent = "ACTIVE";
+                motionBadge.className = "status-badge orange";
+            } else {
+                motionBadge.textContent = "NO MOTION";
+                motionBadge.className = "status-badge green";
+            }
+
+            // Battery state adjustments over timeline loop
+            let currentBattery = 75 + Math.floor(Math.random() * 6);
+            document.getElementById('battery-level').textContent = `${currentBattery}%`;
+            document.getElementById('battery-bar').style.width = `${currentBattery}%`;
+
+            // Signal strength jitter mimicking normal antenna configurations
+            let currentRssi = -50 - Math.floor(Math.random() * 15);
+            document.getElementById('rssi-val').textContent = `${currentRssi} dBm (Strong)`;
+        }
+
+        // --- Initialize Dashboard Execution Engines ---
+        getRealCampusWeather(); // Fire real API data retrieval loop once
+        setInterval(getRealCampusWeather, 600000); // Re-fetch weather updates every 10 minutes to respect free limit tiers
+        
+        setInterval(simulateHardwareTelemetry, 3000); // Update live hardware cards every 3 seconds
+        (function(d, t) {
+    var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+    v.onload = function() {
+      window.voiceflow.chat.load({
+        verify: { projectID: '6a0c10b444f40a1cbf308da7' },
+        url: 'https://general-runtime.voiceflow.com',
+        voice: {
+          url: "https://runtime-api.voiceflow.com"
+        },
+        assistant: {
+          stylesheet: `
+            /* 1. Main Chat Window Panel Background */
+            .vfrc-widget {
+              background: rgba(15, 23, 42, 0.9) !important;
+              backdrop-filter: blur(12px) !important;
+              -webkit-backdrop-filter: blur(12px) !important;
+              border: 2px solid rgba(255, 255, 255, 0.05) !important;
+              box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+            }
+
+            /* 2. Chat Header Strip */
+            .vfrc-header {
+              background: rgba(6, 11, 19, 0.8) !important;
+              border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+            }
+
+            /* 3. Floating Action Launcher Button (Orange Glow) */
+            .vfrc-launcher {
+              background-color: #060b13 !important;
+              border: 1px solid #f97316 !important;
+              box-shadow: 0 0 15px rgba(249, 115, 22, 0.4) !important;
+              transition: all 0.3s ease !important;
+            }
+            .vfrc-launcher:hover {
+              transform: scale(1.08) !important;
+              box-shadow: 0 0 25px rgba(249, 115, 22, 0.7) !important;
+            }
+
+            /* 4. Navigation Chips & Interaction Buttons */
+            .vfrc-button {
+              background: rgba(249, 115, 22, 0.05) !important;
+              border: 1px solid #f97316 !important;
+              color: #f97316 !important;
+              font-weight: 600 !important;
+              transition: all 0.2s ease !important;
+            }
+            .vfrc-button:hover {
+              background: #f97316 !important;
+              color: #060b13 !important;
+              box-shadow: 0 0 12px rgba(249, 115, 22, 0.4) !important;
+            }
+
+            /* 5. User Message Input Area */
+            .vfrc-footer {
+              background: rgba(6, 11, 19, 0.8) !important;
+              border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+            }
+            .vfrc-prompt {
+              background: rgba(15, 23, 42, 0.6) !important;
+              border: 1px solid rgba(255, 255, 255, 0.08) !important;
+              color: #ffffff !important;
+            }
+            .vfrc-prompt:focus {
+              border-color: #f97316 !important;
+            }
+          `
+        }
+      });
+    }
+    v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+})(document, 'script');
+    </script>
+</body>
+</html>

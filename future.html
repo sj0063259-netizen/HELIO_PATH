@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELIOPATH - Future Vision & Research</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #060b13;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: linear-gradient(to bottom, rgba(6, 11, 19, 0.8), rgba(6, 11, 19, 0.96)), url('background-image.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        /* --- Navigation Bar --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(6, 11, 19, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 1000;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #a0aec0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover, .nav-links .active {
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(249, 115, 22, 0.8);
+        }
+
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
+            background: #f97316; box-shadow: 0 0 8px #f97316; transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after, .nav-links .active::after { width: 100%; }
+
+        /* --- Mobile Toggle --- */
+        .menu-checkbox { display: none; }
+        .menu-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; z-index: 1010; padding: 5px; }
+        .menu-toggle span { display: block; width: 30px; height: 3px; background: #ffffff; border-radius: 2px; transition: all 0.3s ease; }
+
+        /* --- Main Workspace Wrapper --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 140px 20px 60px 20px;
+        }
+
+        /* --- Hero Section Panel --- */
+        .vision-hero {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 45px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        .vision-hero h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #ffffff 40%, #f97316 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .vision-hero p {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto 30px auto;
+        }
+
+        /* Long-term Pillars Grid */
+        .pillar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .pillar-tag {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .pillar-tag i {
+            font-size: 1.2rem;
+            color: #f97316;
+            text-shadow: 0 0 10px rgba(249, 115, orange, 0.4);
+        }
+
+        .pillar-tag:hover {
+            border-color: #f97316;
+            background: rgba(249, 115, 22, 0.05);
+            color: #ffffff;
+        }
+
+        /* --- Research Tracks Header Header --- */
+        .section-divider {
+            margin: 40px 0 35px 0;
+            text-align: center;
+        }
+
+        .section-divider h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #f1f5f9;
+        }
+
+        .section-divider h2 span { color: #f97316; }
+
+        /* --- R&D Card Array Layout (Inspired by Dashboard Grids) --- */
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .research-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Centered Big Colorful Icons Block */
+        .icon-wrapper {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .research-card h3 {
+            font-size: 1.2rem;
+            color: #f8fafc;
+            margin-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .research-card p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* --- Color Multi-Variants Configuration (Like the Blueprint design) --- */
+        
+        /* Orange Track */
+        .c-orange .icon-wrapper { color: #f97316; border-color: rgba(249, 115, 22, 0.2); }
+        .c-orange:hover { border-color: #f97316; box-shadow: 0 0 20px rgba(249, 115, 22, 0.2); transform: translateY(-6px); }
+        .c-orange:hover .icon-wrapper { background: #f97316; color: #060b13; box-shadow: 0 0 15px #f97316; }
+
+        /* Blue Track */
+        .c-blue .icon-wrapper { color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
+        .c-blue:hover { border-color: #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); transform: translateY(-6px); }
+        .c-blue:hover .icon-wrapper { background: #3b82f6; color: #060b13; box-shadow: 0 0 15px #3b82f6; }
+
+        /* Green Track */
+        .c-green .icon-wrapper { color: #10b981; border-color: rgba(16, 185, 129, 0.2); }
+        .c-green:hover { border-color: #10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); transform: translateY(-6px); }
+        .c-green:hover .icon-wrapper { background: #10b981; color: #060b13; box-shadow: 0 0 15px #10b981; }
+
+        /* Purple Track */
+        .c-purple .icon-wrapper { color: #a855f7; border-color: rgba(168, 85, 247, 0.2); }
+        .c-purple:hover { border-color: #a855f7; box-shadow: 0 0 20px rgba(168, 85, 247, 0.2); transform: translateY(-6px); }
+        .c-purple:hover .icon-wrapper { background: #a855f7; color: #060b13; box-shadow: 0 0 15px #a855f7; }
+
+
+        /* --- Responsive View Tweaks --- */
+        @media (max-width: 768px) {
+            .navbar { padding: 20px 30px; }
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 75%; max-width: 300px; height: 100vh;
+                background: rgba(6, 11, 19, 0.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+                border-left: 1px solid rgba(255, 255, 255, 0.1); flex-direction: column; justify-content: center;
+                align-items: center; gap: 40px; transition: right 0.4s ease; z-index: 1005;
+            }
+            .menu-checkbox:checked ~ .nav-links { right: 0; }
+            .menu-checkbox:checked ~ .menu-toggle span:nth-child(1) { transform: translateY(9px) rotate(45deg); background-color: #f97316; }
+            .menu-checkbox:checked ~ .menu-toggle span:nth-child(2) { opacity: 0; }
+            .menu-checkbox:checked ~ .menu-toggle span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); background-color: #f97316; }
+
+            .vision-hero { padding: 25px 20px; }
+            .vision-hero h1 { font-size: 2.2rem; }
+            .research-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">HELIOPATH</a>
+        <input type="checkbox" id="menu-check" class="menu-checkbox">
+        <label for="menu-check" class="menu-toggle">
+            <span></span><span></span><span></span>
+        </label>
+        <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="prototypes.html">PROTOTYPES</a></li>
+            <li><a href="dashboard.html">DASHBOARD</a></li>
+            <li><a href="future.html" class="active">FUTURE VISION</a></li>
+            <li><a href="about.html">ABOUT</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        
+        <header class="vision-hero">
+            <h1>Future Vision of HELIOPATH</h1>
+            <p>HELIOPATH aims to evolve into a next-generation smart sustainable infrastructure ecosystem that combines renewable energy systems, IoT automation, intelligent monitoring, and smart campus technologies.</p>
+            
+            <div class="pillar-grid">
+                <div class="pillar-tag"><i class="fa-solid fa-bolt"></i>Energy Control</div>
+                <div class="pillar-tag"><i class="fa-solid fa-road"></i>Smart Pathways</div>
+                <div class="pillar-tag"><i class="fa-solid fa-cloud-sun-rain"></i>Live Tracking</div>
+                <div class="pillar-tag"><i class="fa-solid fa-car-side"></i>EV Support</div>
+                <div class="pillar-tag"><i class="fa-solid fa-graduation-cap"></i>Campus Link</div>
+            </div>
+        </header>
+
+        <section class="section-divider">
+            <h2>🔬 Research & <span>Development Tracks</span></h2>
+        </section>
+
+        <main class="research-grid">
+
+            <article class="research-card c-orange">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                </div>
+                <h3>Smart IoT Infrastructure</h3>
+                <p>Research on sensor-based automation systems for intelligent infrastructure management and layout footprint energy optimization parameters.</p>
+            </article>
+
+            <article class="research-card c-blue">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-solar-panel"></i>
+                </div>
+                <h3>Renewable Energy</h3>
+                <p>Study and active optimization implementation of high efficiency photovoltaic capture nodes tailored specifically for distributed campus utilities.</p>
+            </article>
+
+            <article class="research-card c-green">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <h3>Lighting Automation</h3>
+                <p>Development of adaptive path safety illumination frameworks relying on sensory environmental LDR evaluation and solid state logic controllers.</p>
+            </article>
+
+            <article class="research-card c-purple">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-car-battery"></i>
+                </div>
+                <h3>Battery Systems</h3>
+                <p>Research on advanced energy storage battery load balancing arrays, charging safety thresholds, and continuous local grid balancing deployment.</p>
+            </article>
+
+            <article class="research-card c-blue">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-charging-station"></i>
+                </div>
+                <h3>Smart EV Charging</h3>
+                <p>Evolving micro-grid frameworks to bundle renewable-source EV charging stations layered alongside remote infrastructure allocation trackers.</p>
+            </article>
+
+            <article class="research-card c-orange">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h3>Monitoring Dashboards</h3>
+                <p>Development of distributed telemetry dashboards tracking energy generation vectors, system automation states, and localized sensor feeds.</p>
+            </article>
+
+            <article class="research-card c-green">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <h3>Autonomous Systems</h3>
+                <p>Exploration of automated robotic infrastructure verification modules and lightweight aerial tracking units for routine remote monitoring tasks.</p>
+            </article>
+
+            <article class="research-card c-purple">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <h3>AI-Assisted Infrastructure</h3>
+                <p>Future engineering deployment of edge artificial intelligence logic models to enable predictive system maintenance routines and load balancing updates.</p>
+            </article>
+
+        </main>
+    </div>
+<script type="text/javascript">
+  (function(d, t) {
+      var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+      v.onload = function() {
+        window.voiceflow.chat.load({
+          verify: { projectID: '6a0c10b444f40a1cbf308da7' },
+          url: 'https://general-runtime.voiceflow.com',
+          voice: {
+            url: "https://runtime-api.voiceflow.com"
+          },
+          // Custom CSS & Layout Injection Layer
+          assistant: {
+            stylesheet: `
+              /* 1. Main Chat Window Panel Background */
+              .vfrc-widget {
+                background: rgba(15, 23, 42, 0.9) !important;
+                backdrop-filter: blur(12px) !important;
+                -webkit-backdrop-filter: blur(12px) !important;
+                border: 2px solid rgba(255, 255, 255, 0.05) !important;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+              }
+
+              /* 2. Chat Header Strip */
+              .vfrc-header {
+                background: rgba(6, 11, 19, 0.8) !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+              }
+
+              /* 3. Floating Action Launcher Button (Orange Glow) */
+              .vfrc-launcher {
+                background-color: #060b13 !important;
+                border: 1px solid #f97316 !important;
+                box-shadow: 0 0 15px rgba(249, 115, 22, 0.4) !important;
+                transition: all 0.3s ease !important;
+              }
+              .vfrc-launcher:hover {
+                transform: scale(1.08) !important;
+                box-shadow: 0 0 25px rgba(249, 115, 22, 0.7) !important;
+              }
+
+              /* 4. Navigation Chips & Interaction Buttons */
+              .vfrc-button {
+                background: rgba(249, 115, 22, 0.05) !important;
+                border: 1px solid #f97316 !important;
+                color: #f97316 !important;
+                font-weight: 600 !important;
+                transition: all 0.2s ease !important;
+              }
+              .vfrc-button:hover {
+                background: #f97316 !important;
+                color: #060b13 !important;
+                box-shadow: 0 0 12px rgba(249, 115, 22, 0.4) !important;
+              }
+
+              /* 5. User Message Input Area */
+              .vfrc-footer {
+                background: rgba(6, 11, 19, 0.8) !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+              }
+              .vfrc-prompt {
+                background: rgba(15, 23, 42, 0.6) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                color: #ffffff !important;
+              }
+              .vfrc-prompt:focus {
+                border-color: #f97316 !important;
+              }
+            `
+          }
+        });
+      }
+      v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+  })(document, 'script');
+</script>
+</body>
+</html>

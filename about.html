@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELIOPATH - About & Vision</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #060b13;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: linear-gradient(to bottom, rgba(6, 11, 19, 0.8), rgba(6, 11, 19, 0.96)), url('background-image.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        /* --- Navigation Bar --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(6, 11, 19, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 1000;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #a0aec0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover, .nav-links .active {
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(0, 212, 255, 0.8);
+        }
+
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
+            background: #00d4ff; box-shadow: 0 0 8px #00d4ff; transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after, .nav-links .active::after { width: 100%; }
+
+        /* --- Mobile Toggle --- */
+        .menu-checkbox { display: none; }
+        .menu-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; z-index: 1010; padding: 5px; }
+        .menu-toggle span { display: block; width: 30px; height: 3px; background: #ffffff; border-radius: 2px; transition: all 0.3s ease; }
+
+        /* --- Main Content Envelope --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 140px 20px 60px 20px;
+        }
+
+        /* --- Primary Page Header --- */
+        .page-title-block {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title-block h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            background: linear-gradient(135deg, #ffffff 40%, #00d4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .page-title-block p {
+            font-size: 1.05rem;
+            color: #94a3b8;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- Project Vision Content Block --- */
+        .about-vision-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 45px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            margin-bottom: 50px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .about-vision-card p {
+            font-size: 1.05rem;
+            color: #cbd5e1;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .about-vision-card p:last-of-type {
+            margin-bottom: 0;
+        }
+
+        /* --- Sub Headings Layout --- */
+        .sub-heading-accent {
+            font-size: 1.4rem;
+            color: #00d4ff;
+            margin: 40px 0 20px 0;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- Core Tech Floating Tags Container --- */
+        .tech-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 50px;
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .tech-tag {
+            background: rgba(0, 212, 255, 0.03);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            color: #94a3b8;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .tech-tag:hover {
+            border-color: #00d4ff;
+            color: #ffffff;
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* --- Contributors Grid Layout --- */
+        .contributors-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .contrib-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .contrib-card:hover {
+            border-color: #f97316;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.08);
+        }
+
+        .contrib-icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: rgba(249, 115, 22, 0.05);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #f97316;
+            flex-shrink: 0;
+        }
+
+        .contrib-details h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 4px;
+        }
+
+        .contrib-details p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* --- Mentors Section Specific Layout --- */
+        .mentor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .mentor-border:hover {
+            border-color: #00d4ff;
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.08);
+        }
+        .mentor-icon {
+            color: #00d4ff;
+            background: rgba(0, 212, 255, 0.05);
+            border-color: rgba(0, 212, 255, 0.2);
+        }
+
+        /* --- Responsive Viewports Media Queries --- */
+        @media (max-width: 768px) {
+            .navbar { padding: 20px 30px; }
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 75%; max-width: 300px; height: 100vh;
+                background: rgba(6, 11, 19, 0.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+                border-left: 1px solid rgba(255, 255, 255, 0.1); flex-direction: column; justify-content: center;
+                align-items: center; gap: 40px; transition: right 0.4s ease; z-index: 1005;
+            }
+            .menu-checkbox:checked ~ .nav-links { right: 0; }
+            .menu-checkbox:checked ~ .menu-toggle span:nth-child(1) { transform: translateY(9px) rotate(45deg); background-color: #00d4ff; }
+            .menu-checkbox:checked ~ .menu-toggle span:nth-child(2) { opacity: 0; }
+            .menu-checkbox:checked ~ .menu-toggle span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); background-color: #00d4ff; }
+
+            .page-title-block h1 { font-size: 2.1rem; }
+            .about-vision-card { padding: 25px 20px; }
+            .mentor-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">HELIOPATH</a>
+        <input type="checkbox" id="menu-check" class="menu-checkbox">
+        <label for="menu-check" class="menu-toggle">
+            <span></span><span></span><span></span>
+        </label>
+        <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="prototypes.html">PROTOTYPES</a></li>
+            <li><a href="dashboard.html">DASHBOARD</a></li>
+            <li><a href="future.html">FUTURE VISION</a></li>
+            <li><a href="about.html" class="active">ABOUT</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        
+        <header class="page-title-block">
+            <h1>About HELIOPATH</h1>
+            <p>Smart Sustainable Infrastructure Ecosystem</p>
+        </header>
+
+        <main class="about-vision-card">
+            <p>HELIOPATH is a smart sustainable infrastructure project focused on integrating renewable energy, IoT automation, and intelligent campus technologies into a connected and energy-efficient environment.</p>
+            
+            <p>The project initially began as a conceptual CAD-based solar roadway model and gradually evolved into a multi-phase infrastructure system involving smart campus planning, solar pathway integration, battery storage systems, EV charging concepts, and IoT-enabled automation technologies.</p>
+            
+            <p>HELIOPATH combines multiple engineering domains including CAD modeling, embedded systems, IoT automation, renewable energy systems, sensor integration, and real-time monitoring dashboards.</p>
+            
+            <p>The project currently focuses on developing smart pathway lighting systems, ESP32-based automation, sensor-controlled infrastructure, and live dashboard monitoring. Future development aims to include cloud-connected systems, AI-assisted automation, robotics integration, and intelligent energy management technologies.</p>
+            
+            <p>HELIOPATH represents an ongoing exploration of how sustainable infrastructure and smart technologies can work together to create efficient, adaptive, and future-ready environments.</p>
+        </main>
+
+        <h2 class="sub-heading-accent"><i class="fa-solid fa-microchip"></i> Core Technologies</h2>
+        <div class="tech-tags-container">
+            <span class="tech-tag">ESP32</span>
+            <span class="tech-tag">FreeCAD</span>
+            <span class="tech-tag">IoT Architecture</span>
+            <span class="tech-tag">HTML5 / CSS3</span>
+            <span class="tech-tag">JavaScript (ES6)</span>
+            <span class="tech-tag">Automation Logic</span>
+            <span class="tech-tag">Renewable Energy</span>
+            <span class="tech-tag">Sensor Integration</span>
+        </div>
+
+        <h2 class="sub-heading-accent" style="color: #f97316;"><i class="fa-solid fa-users"></i> Project Contributors</h2>
+        <section class="contributors-grid">
+            
+            <article class="contrib-card">
+                <div class="contrib-icon-box"><i class="fa-solid fa-laptop-code"></i></div>
+                <div class="contrib-details">
+                    <h3>Satyam Kumar Jha</h3>
+                    <p>Project Concept Development, CAD Modeling, Infrastructure Design, Solar Pathway System Design, Prototype Planning, IoT System Development, ESP32 Integration, Sensor Automation Logic, Smart Lighting System, OLED Monitoring Integration, Dashboard Planning, and Future Research Direction.</p>
+                </div>
+            </article>
+
+            <article class="contrib-card">
+                <div class="contrib-icon-box"><i class="fa-solid fa-code"></i></div>
+                <div class="contrib-details">
+                    <h3>Aman chaudhary</h3>
+                    <p>Website Development Support, Frontend Assistance, Dashboard Integration Support, and Project Presentation Assistance.</p>
+                </div>
+            </article>
+
+            <article class="contrib-card">
+                <div class="contrib-icon-box"><i class="fa-solid fa-file-signature"></i></div>
+                <div class="contrib-details">
+                    <h3>Ananya</h3>
+                    <p>Documentation Support, Research Assistance, Content Organization, and Project Coordination.</p>
+                </div>
+            </article>
+
+            <article class="contrib-card">
+                <div class="contrib-icon-box"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                <div class="contrib-details">
+                    <h3>Bhavani</h3>
+                    <p>Research Support, Model Assembly Assistance, Testing Support, and Team Coordination.</p>
+                </div>
+            </article>
+
+        </section>
+
+        <h2 class="sub-heading-accent"><i class="fa-solid fa-graduation-cap"></i> Academic Guidance</h2>
+        <section class="mentor-grid">
+            
+            <article class="contrib-card mentor-border">
+                <div class="contrib-icon-box mentor-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+                <div class="contrib-details">
+                    <h3>Dr. Sangamesh Rajole</h3>
+                    <p>Project Guide & Faculty Supervisor</p>
+                </div>
+            </article>
+
+        </section>
+
+    </div>
+<script type="text/javascript">
+  (function(d, t) {
+      var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+      v.onload = function() {
+        window.voiceflow.chat.load({
+          verify: { projectID: '6a0c10b444f40a1cbf308da7' },
+          url: 'https://general-runtime.voiceflow.com',
+          voice: {
+            url: "https://runtime-api.voiceflow.com"
+          },
+          // Custom CSS & Layout Injection Layer
+          assistant: {
+            stylesheet: `
+              /* 1. Main Chat Window Panel Background */
+              .vfrc-widget {
+                background: rgba(15, 23, 42, 0.9) !important;
+                backdrop-filter: blur(12px) !important;
+                -webkit-backdrop-filter: blur(12px) !important;
+                border: 2px solid rgba(255, 255, 255, 0.05) !important;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+              }
+
+              /* 2. Chat Header Strip */
+              .vfrc-header {
+                background: rgba(6, 11, 19, 0.8) !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+              }
+
+              /* 3. Floating Action Launcher Button (Orange Glow) */
+              .vfrc-launcher {
+                background-color: #060b13 !important;
+                border: 1px solid #f97316 !important;
+                box-shadow: 0 0 15px rgba(249, 115, 22, 0.4) !important;
+                transition: all 0.3s ease !important;
+              }
+              .vfrc-launcher:hover {
+                transform: scale(1.08) !important;
+                box-shadow: 0 0 25px rgba(249, 115, 22, 0.7) !important;
+              }
+
+              /* 4. Navigation Chips & Interaction Buttons */
+              .vfrc-button {
+                background: rgba(249, 115, 22, 0.05) !important;
+                border: 1px solid #f97316 !important;
+                color: #f97316 !important;
+                font-weight: 600 !important;
+                transition: all 0.2s ease !important;
+              }
+              .vfrc-button:hover {
+                background: #f97316 !important;
+                color: #060b13 !important;
+                box-shadow: 0 0 12px rgba(249, 115, 22, 0.4) !important;
+              }
+
+              /* 5. User Message Input Area */
+              .vfrc-footer {
+                background: rgba(6, 11, 19, 0.8) !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+              }
+              .vfrc-prompt {
+                background: rgba(15, 23, 42, 0.6) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                color: #ffffff !important;
+              }
+              .vfrc-prompt:focus {
+                border-color: #f97316 !important;
+              }
+            `
+          }
+        });
+      }
+      v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+  })(document, 'script');
+</script>
+</body>
+</html>
